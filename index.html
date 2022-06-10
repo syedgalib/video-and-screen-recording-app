@@ -6,12 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
 
+    <!-- If Production -->
     <!-- <link rel="stylesheet" href="assets/css/main.min.css"> -->
   </head>
   <body>
     <div id="root"></div>
 
+    <!-- If Production -->
     <!-- <script src="/assets/js/main.min.js"></script> -->
+
+    <!-- If Development -->
+    <script type="module">
+      import RefreshRuntime from 'http://localhost:3000/@react-refresh'
+      RefreshRuntime.injectIntoGlobalHook(window)
+      window.$RefreshReg$ = () => {}
+      window.$RefreshSig$ = () => (type) => type
+      window.__vite_plugin_react_preamble_installed__ = true
+    </script>
+
     <script type="module" src="/src/js/main.jsx"></script>
   </body>
 </html>
