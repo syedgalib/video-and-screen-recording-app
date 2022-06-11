@@ -1,1 +1,1 @@
-# Vite Starter Project
+# A simple screen and video recoder app with React
