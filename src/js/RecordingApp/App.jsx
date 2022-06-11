@@ -1,4 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import PrimaryButton from "../Components/PrimaryButton";
+import PrimaryAccentButton from "../Components/PrimaryAccentButton";
+import PrimaryLinkButton from "../Components/PrimaryLinkButton";
+import SeconderyButton from "../Components/SeconderyButton";
+import DangerButton from "../Components/DangerButton";
 
 function App() {
   const [recorder, setRecorder] = useState(null);
@@ -21,14 +26,6 @@ function App() {
 
   // Start Recording
   useEffect(() => {
-    console.log({
-      videoStream: videoStream,
-      screenStream: screenStream,
-      audioStream: audioStream,
-      initVideoRecording: initVideoRecording,
-      initScreenRecording: initScreenRecording,
-    });
-
     if (initScreenRecording) {
       startScreenRecording();
       return;
@@ -45,7 +42,13 @@ function App() {
     try {
       // Setup Video Recorder
       const newVideoStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: { facingMode: "user" },
+      });
+
+      setVideoStream(newVideoStream);
+
+      // Setup Audio Recorder
+      const newAudioStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
@@ -53,12 +56,12 @@ function App() {
         },
       });
 
-      setVideoStream(newVideoStream);
+      setAudioStream(newAudioStream);
 
       // setInitVideoRecording
       setInitVideoRecording(true);
     } catch (error) {
-      console.warn("setupStream:", { error });
+      console.warn("Permission denied", { error });
     }
   }
 
@@ -86,7 +89,7 @@ function App() {
       // setIsInitRecording
       setInitScreenRecording(true);
     } catch (error) {
-      console.warn("setupStream:", { error });
+      console.warn("Permission denied", { error });
     }
   }
 
@@ -98,7 +101,10 @@ function App() {
     }
 
     if (recordingVideo.current.srcObject) {
-      return;
+      recordingVideo.current.srcObject.getVideoTracks().forEach((track) => {
+        track.stop();
+        recordingVideo.current.srcObject.removeTrack(track);
+      });
     }
 
     if (videoStream) {
@@ -116,45 +122,13 @@ function App() {
       return;
     }
 
-    console.log("Start Video Recording");
-
-    if (!videoStream) {
+    if (!videoStream || !audioStream) {
       console.warn("Something went wrong!");
-      console.log({ stream: videoStream });
-      return;
-    }
-
-    // Setup Recorder
-    const _recorder = new MediaRecorder(videoStream);
-    _recorder.ondataavailable = handleDataAvailable;
-    _recorder.onstop = handleDataStop;
-    _recorder.start(1000);
-
-    setRecorder(_recorder);
-    setIsRecording(true);
-
-    // Setup Video Feedback
-    setupVideoFeedback();
-
-    console.log("Recording has started");
-  }
-
-  // Start Screen Recording
-  async function startScreenRecording() {
-    if (isRecording) {
-      return;
-    }
-
-    console.log("Start Screen Recording");
-
-    if (!screenStream || !audioStream) {
-      console.warn("Something went wrong!");
-      console.log({ stream: screenStream, audio: audioStream });
       return;
     }
 
     const newMixedStream = new MediaStream([
-      ...screenStream.getTracks(),
+      ...videoStream.getTracks(),
       ...audioStream.getTracks(),
     ]);
 
@@ -165,20 +139,43 @@ function App() {
     _recorder.start(1000);
 
     setRecorder(_recorder);
-
     setIsRecording(true);
 
     // Setup Video Feedback
     setupVideoFeedback();
+  }
 
-    console.log("Recording has started");
+  // Start Screen Recording
+  async function startScreenRecording() {
+    if (isRecording) {
+      return;
+    }
+
+    if (!screenStream || !audioStream) {
+      console.warn("Something went wrong!");
+      return;
+    }
+
+    const newMixedStream = new MediaStream([
+      ...screenStream.getTracks(),
+      ...audioStream.getTracks(),
+    ]);
+
+    const _recorder = new MediaRecorder(newMixedStream);
+    _recorder.ondataavailable = handleDataAvailable;
+    _recorder.onstop = handleDataStop;
+    _recorder.start(1000);
+
+    setRecorder(_recorder);
+    setIsRecording(true);
+
+    // Setup Video Feedback
+    setupVideoFeedback();
   }
 
   // Handle Data Available
   function handleDataAvailable(event) {
     setChunks((currentChunks) => {
-      console.log({ currentChunks, data: event.data });
-
       if (!currentChunks) {
         currentChunks = [];
       }
@@ -215,15 +212,7 @@ function App() {
       recordedVideo.current.load();
       recordedVideo.current.onLoadedData = function () {
         recordedVideo.current.play();
-        console.log("play recordedVideo");
       };
-
-      console.log({
-        currentChunks,
-        blob,
-        _downloadLink,
-        recordedVideo,
-      });
 
       return [];
     });
@@ -263,7 +252,7 @@ function App() {
     <>
       {/* Navbar */}
       <header className="bg-gray-900">
-        <div className="container max-auto flex justify-center items-center py-4">
+        <div className="container max-auto flex justify-center items-center p-4">
           <h1 className="text-2xl font-bold uppercase">
             Screen & Video Recoder
           </h1>
@@ -288,33 +277,24 @@ function App() {
 
           {!isRecording && (
             <div className="flex justify-center items-center -mx-4">
-              <button
-                type="button"
-                className="start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md"
+              <PrimaryButton
+                label="Record Video"
                 onClick={setupVideoRecording}
-              >
-                Record Video
-              </button>
-              <button
-                type="button"
-                className="start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md"
+              />
+              <PrimaryAccentButton
+                label="Record Screen"
                 onClick={setupScreenRecording}
-              >
-                Record Screen
-              </button>
+              />
             </div>
           )}
 
           {isRecording && (
             <div className="flex justify-center items-center -mx-4">
-              <button
-                type="button"
-                className="start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md"
+              <DangerButton
+                label="Stop Recording"
                 disabled={!isRecording}
                 onClick={stopRecording}
-              >
-                Stop Recording
-              </button>
+              />
             </div>
           )}
         </div>
@@ -335,22 +315,13 @@ function App() {
           ></video>
 
           <div className="flex justify-center items-center -mx-4">
-            <a
+            <PrimaryLinkButton
               href={downloadLink}
               download="video.mp4"
-              type="button"
-              className="download-video text-center mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md"
-            >
-              Download Video
-            </a>
-            <button
-              download="video.mp4"
-              type="button"
-              className="download-video text-center mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md"
-              onClick={reset}
-            >
-              Record Another One
-            </button>
+              label="Download"
+            />
+
+            <SeconderyButton label="Record Another One" onClick={reset} />
           </div>
         </div>
       </main>
