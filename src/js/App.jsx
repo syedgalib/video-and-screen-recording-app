@@ -172,8 +172,6 @@ function App() {
       </header>
 
       <main className="overflow-hidden max-w-3xl mr-auto ml-auto">
-        <p>{"isDoneRecording" + (isDoneRecording ? ": true" : ": false")}</p>
-
         {/* recording-video-wrap */}
         <div
           className={
