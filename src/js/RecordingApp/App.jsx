@@ -243,6 +243,20 @@ function App() {
     setInitScreenRecording(false);
     setIsRecording(false);
     setIsDoneRecording(false);
+
+    if (recordingVideo.current.srcObject) {
+      recordingVideo.current.srcObject.getVideoTracks().forEach((track) => {
+        track.stop();
+        recordingVideo.current.srcObject.removeTrack(track);
+      });
+    }
+
+    if (recordedVideo.current.srcObject) {
+      recordedVideo.current.srcObject.getVideoTracks().forEach((track) => {
+        track.stop();
+        recordedVideo.current.srcObject.removeTrack(track);
+      });
+    }
   }
 
   return (
@@ -316,6 +330,7 @@ function App() {
             ref={recordedVideo}
             src=""
             autoPlay
+            controls
             className="recorded-video bg-black w-full aspect-video mb-4"
           ></video>
 
