@@ -10,7 +10,7 @@ function App() {
         </div>
       </header>
 
-      <main className="overflow-hidden">
+      <main className="overflow-hidden max-w-3xl mr-auto ml-auto">
         {/* recording-video-wrap */}
         <div className="recording-video-wrap container mx-auto py-8 px-4 mb-4">
           <h2 className="text-xl text-gray-500 uppercase font-light mb-4">
@@ -41,7 +41,7 @@ function App() {
         </div>
 
         {/* recorded-video-wrap */}
-        <div className="recorded-video-wrap  container mx-auto py-8 px-4">
+        <div className="recorded-video-wrap hidden container mx-auto py-8 px-4">
           <h2 className="text-xl text-gray-500 uppercase font-light mb-4">
             Recoded Video
           </h2>
