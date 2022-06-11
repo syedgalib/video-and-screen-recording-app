@@ -10,7 +10,7 @@ export default defineConfig(({ command, mode }) => {
   console.log({ command, mode });
 
   return {
-    base: 'https://syedgalib.github.io/recorder-app',
+    base: 'https://syedgalib.github.io/video-and-screen-recording-app',
     plugins: [react()],
     build: {
       outDir: '',
