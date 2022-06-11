@@ -1,15 +1,16 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import projectConfig from './vite.project-config'
+import path from 'path';
 
 // https://vitejs.dev/config/
-export default defineConfig( ( { command, mode } ) => {
-  const config = projectConfig( mode );
+export default defineConfig(({ command, mode }) => {
+  const config = projectConfig(mode);
 
-  console.log( { command, mode } );
+  console.log({ command, mode });
 
   return {
-    plugins: [ react() ],
+    plugins: [react()],
     build: {
       outDir: '',
       assetsDir: 'assets',
@@ -29,5 +30,11 @@ export default defineConfig( ( { command, mode } ) => {
       },
     },
     server: config.server,
+
+    resolve: {
+      alias: {
+        SASS: path.resolve(__dirname, 'src/sass')
+      }
+    }
   }
 })

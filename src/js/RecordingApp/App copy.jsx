@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import "./../sass/tailwind.css";
 
 function App() {
   const [recorder, setRecorder] = useState(null);
@@ -167,10 +166,13 @@ function App() {
       {/* Navbar */}
       <header className="bg-gray-900">
         <div className="container max-auto flex justify-center items-center py-4">
-          <h1 className="text-2xl font-bold uppercase">Recorder App</h1>
+          <h1 className="text-2xl font-bold uppercase">
+            Screen & Video Recoder
+          </h1>
         </div>
       </header>
 
+      {/* Main */}
       <main className="overflow-hidden max-w-3xl mr-auto ml-auto">
         {/* recording-video-wrap */}
         <div
@@ -180,7 +182,7 @@ function App() {
           }
         >
           <h2 className="text-xl text-gray-500 uppercase font-light mb-4">
-            Video Recoder
+            Preview
           </h2>
 
           <video
@@ -190,25 +192,39 @@ function App() {
             className="video-feedback bg-black w-full h-auto mb-4"
           ></video>
 
-          <div className="flex justify-center items-center -mx-4">
-            <button
-              type="button"
-              className="start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md"
-              disabled={isRecording}
-              onClick={setupStream}
-            >
-              Start Recording
-            </button>
-            <button
-              type="button"
-              className="start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md"
-              disabled={!isRecording}
-              onClick={stopRecording}
-            >
-              Stop Recording
-            </button>
-          </div>
+          {!isRecording && (
+            <div className="flex justify-center items-center -mx-4">
+              <button
+                type="button"
+                className="start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md"
+                onClick={setupStream}
+              >
+                Record Video
+              </button>
+              <button
+                type="button"
+                className="start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md"
+                onClick={setupStream}
+              >
+                Record Screen
+              </button>
+            </div>
+          )}
+
+          {isRecording && (
+            <div className="flex justify-center items-center -mx-4">
+              <button
+                type="button"
+                className="start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md"
+                disabled={!isRecording}
+                onClick={stopRecording}
+              >
+                Stop Recording
+              </button>
+            </div>
+          )}
         </div>
+
         {/* recorded-video-wrap */}
         <div
           className={

@@ -568,14 +568,14 @@ var react_development = { exports: {} };
       function escapeUserProvidedKey(text) {
         return text.replace(userProvidedKeyEscapeRegex, "$&/");
       }
-      function getElementKey(element, index2) {
+      function getElementKey(element, index) {
         if (typeof element === "object" && element !== null && element.key != null) {
           {
             checkKeyStringCoercion(element.key);
           }
           return escape("" + element.key);
         }
-        return index2.toString(36);
+        return index.toString(36);
       }
       function mapIntoArray(children, array, escapedPrefix, nameSoFar, callback) {
         var type = typeof children;
@@ -1819,9 +1819,9 @@ var scheduler_development = {};
       var enableProfiling = false;
       var frameYieldMs = 5;
       function push(heap, node) {
-        var index2 = heap.length;
+        var index = heap.length;
         heap.push(node);
-        siftUp(heap, node, index2);
+        siftUp(heap, node, index);
       }
       function peek(heap) {
         return heap.length === 0 ? null : heap[0];
@@ -1839,42 +1839,42 @@ var scheduler_development = {};
         return first;
       }
       function siftUp(heap, node, i2) {
-        var index2 = i2;
-        while (index2 > 0) {
-          var parentIndex = index2 - 1 >>> 1;
+        var index = i2;
+        while (index > 0) {
+          var parentIndex = index - 1 >>> 1;
           var parent = heap[parentIndex];
           if (compare(parent, node) > 0) {
             heap[parentIndex] = node;
-            heap[index2] = parent;
-            index2 = parentIndex;
+            heap[index] = parent;
+            index = parentIndex;
           } else {
             return;
           }
         }
       }
       function siftDown(heap, node, i2) {
-        var index2 = i2;
+        var index = i2;
         var length = heap.length;
         var halfLength = length >>> 1;
-        while (index2 < halfLength) {
-          var leftIndex = (index2 + 1) * 2 - 1;
+        while (index < halfLength) {
+          var leftIndex = (index + 1) * 2 - 1;
           var left = heap[leftIndex];
           var rightIndex = leftIndex + 1;
           var right = heap[rightIndex];
           if (compare(left, node) < 0) {
             if (rightIndex < length && compare(right, left) < 0) {
-              heap[index2] = right;
+              heap[index] = right;
               heap[rightIndex] = node;
-              index2 = rightIndex;
+              index = rightIndex;
             } else {
-              heap[index2] = left;
+              heap[index] = left;
               heap[leftIndex] = node;
-              index2 = leftIndex;
+              index = leftIndex;
             }
           } else if (rightIndex < length && compare(right, node) < 0) {
-            heap[index2] = right;
+            heap[index] = right;
             heap[rightIndex] = node;
-            index2 = rightIndex;
+            index = rightIndex;
           } else {
             return;
           }
@@ -5724,7 +5724,7 @@ var scheduler_development = {};
       {
         var map = /* @__PURE__ */ new Map();
         var lane = 1;
-        for (var index3 = 0; index3 < TotalLanes; index3++) {
+        for (var index2 = 0; index2 < TotalLanes; index2++) {
           var label = getLabelForLane(lane);
           map.set(lane, label);
           lane *= 2;
@@ -6095,9 +6095,9 @@ var scheduler_development = {};
         var entanglements = root2.entanglements;
         var lanes = nextLanes & entangledLanes;
         while (lanes > 0) {
-          var index3 = pickArbitraryLaneIndex(lanes);
-          var lane = 1 << index3;
-          nextLanes |= entanglements[index3];
+          var index2 = pickArbitraryLaneIndex(lanes);
+          var lane = 1 << index2;
+          nextLanes |= entanglements[index2];
           lanes &= ~lane;
         }
       }
@@ -6107,9 +6107,9 @@ var scheduler_development = {};
       var eventTimes = root2.eventTimes;
       var mostRecentEventTime = NoTimestamp;
       while (lanes > 0) {
-        var index3 = pickArbitraryLaneIndex(lanes);
-        var lane = 1 << index3;
-        var eventTime = eventTimes[index3];
+        var index2 = pickArbitraryLaneIndex(lanes);
+        var lane = 1 << index2;
+        var eventTime = eventTimes[index2];
         if (eventTime > mostRecentEventTime) {
           mostRecentEventTime = eventTime;
         }
@@ -6168,12 +6168,12 @@ var scheduler_development = {};
       var expirationTimes = root2.expirationTimes;
       var lanes = pendingLanes;
       while (lanes > 0) {
-        var index3 = pickArbitraryLaneIndex(lanes);
-        var lane = 1 << index3;
-        var expirationTime = expirationTimes[index3];
+        var index2 = pickArbitraryLaneIndex(lanes);
+        var lane = 1 << index2;
+        var expirationTime = expirationTimes[index2];
         if (expirationTime === NoTimestamp) {
           if ((lane & suspendedLanes) === NoLanes || (lane & pingedLanes) !== NoLanes) {
-            expirationTimes[index3] = computeExpirationTime(lane, currentTime);
+            expirationTimes[index2] = computeExpirationTime(lane, currentTime);
           }
         } else if (expirationTime <= currentTime) {
           root2.expiredLanes |= lane;
@@ -6283,8 +6283,8 @@ var scheduler_development = {};
         root2.pingedLanes = NoLanes;
       }
       var eventTimes = root2.eventTimes;
-      var index3 = laneToIndex(updateLane);
-      eventTimes[index3] = eventTime;
+      var index2 = laneToIndex(updateLane);
+      eventTimes[index2] = eventTime;
     }
     function markRootSuspended(root2, suspendedLanes) {
       root2.suspendedLanes |= suspendedLanes;
@@ -6292,9 +6292,9 @@ var scheduler_development = {};
       var expirationTimes = root2.expirationTimes;
       var lanes = suspendedLanes;
       while (lanes > 0) {
-        var index3 = pickArbitraryLaneIndex(lanes);
-        var lane = 1 << index3;
-        expirationTimes[index3] = NoTimestamp;
+        var index2 = pickArbitraryLaneIndex(lanes);
+        var lane = 1 << index2;
+        expirationTimes[index2] = NoTimestamp;
         lanes &= ~lane;
       }
     }
@@ -6314,11 +6314,11 @@ var scheduler_development = {};
       var expirationTimes = root2.expirationTimes;
       var lanes = noLongerPendingLanes;
       while (lanes > 0) {
-        var index3 = pickArbitraryLaneIndex(lanes);
-        var lane = 1 << index3;
-        entanglements[index3] = NoLanes;
-        eventTimes[index3] = NoTimestamp;
-        expirationTimes[index3] = NoTimestamp;
+        var index2 = pickArbitraryLaneIndex(lanes);
+        var lane = 1 << index2;
+        entanglements[index2] = NoLanes;
+        eventTimes[index2] = NoTimestamp;
+        expirationTimes[index2] = NoTimestamp;
         lanes &= ~lane;
       }
     }
@@ -6327,10 +6327,10 @@ var scheduler_development = {};
       var entanglements = root2.entanglements;
       var lanes = rootEntangledLanes;
       while (lanes) {
-        var index3 = pickArbitraryLaneIndex(lanes);
-        var lane = 1 << index3;
-        if (lane & entangledLanes | entanglements[index3] & entangledLanes) {
-          entanglements[index3] |= entangledLanes;
+        var index2 = pickArbitraryLaneIndex(lanes);
+        var lane = 1 << index2;
+        if (lane & entangledLanes | entanglements[index2] & entangledLanes) {
+          entanglements[index2] |= entangledLanes;
         }
         lanes &= ~lane;
       }
@@ -6386,9 +6386,9 @@ var scheduler_development = {};
       }
       var pendingUpdatersLaneMap = root2.pendingUpdatersLaneMap;
       while (lanes > 0) {
-        var index3 = laneToIndex(lanes);
-        var lane = 1 << index3;
-        var updaters = pendingUpdatersLaneMap[index3];
+        var index2 = laneToIndex(lanes);
+        var lane = 1 << index2;
+        var updaters = pendingUpdatersLaneMap[index2];
         updaters.add(fiber);
         lanes &= ~lane;
       }
@@ -6400,9 +6400,9 @@ var scheduler_development = {};
       var pendingUpdatersLaneMap = root2.pendingUpdatersLaneMap;
       var memoizedUpdaters = root2.memoizedUpdaters;
       while (lanes > 0) {
-        var index3 = laneToIndex(lanes);
-        var lane = 1 << index3;
-        var updaters = pendingUpdatersLaneMap[index3];
+        var index2 = laneToIndex(lanes);
+        var lane = 1 << index2;
+        var updaters = pendingUpdatersLaneMap[index2];
         if (updaters.size > 0) {
           updaters.forEach(function(fiber) {
             var alternate = fiber.alternate;
@@ -10199,36 +10199,36 @@ var scheduler_development = {};
     {
       fiberStack = [];
     }
-    var index2 = -1;
+    var index = -1;
     function createCursor(defaultValue) {
       return {
         current: defaultValue
       };
     }
     function pop(cursor, fiber) {
-      if (index2 < 0) {
+      if (index < 0) {
         {
           error("Unexpected pop.");
         }
         return;
       }
       {
-        if (fiber !== fiberStack[index2]) {
+        if (fiber !== fiberStack[index]) {
           error("Unexpected Fiber popped.");
         }
       }
-      cursor.current = valueStack[index2];
-      valueStack[index2] = null;
+      cursor.current = valueStack[index];
+      valueStack[index] = null;
       {
-        fiberStack[index2] = null;
+        fiberStack[index] = null;
       }
-      index2--;
+      index--;
     }
     function push(cursor, value, fiber) {
-      index2++;
-      valueStack[index2] = cursor.current;
+      index++;
+      valueStack[index] = cursor.current;
       {
-        fiberStack[index2] = fiber;
+        fiberStack[index] = fiber;
       }
       cursor.current = value;
     }
@@ -11862,7 +11862,7 @@ var scheduler_development = {};
       treeForkProvider = workInProgress2;
       treeForkCount = totalChildren;
     }
-    function pushTreeId(workInProgress2, totalChildren, index3) {
+    function pushTreeId(workInProgress2, totalChildren, index2) {
       warnIfNotHydrating();
       idStack[idStackIndex++] = treeContextId;
       idStack[idStackIndex++] = treeContextOverflow;
@@ -11872,7 +11872,7 @@ var scheduler_development = {};
       var baseOverflow = treeContextOverflow;
       var baseLength = getBitLength(baseIdWithLeadingBit) - 1;
       var baseId = baseIdWithLeadingBit & ~(1 << baseLength);
-      var slot = index3 + 1;
+      var slot = index2 + 1;
       var length = getBitLength(totalChildren) + baseLength;
       if (length > 30) {
         var numberOfOverflowBits = baseLength - baseLength % 5;
@@ -17065,13 +17065,13 @@ var scheduler_development = {};
         }
       }
     }
-    function validateSuspenseListNestedChild(childSlot, index3) {
+    function validateSuspenseListNestedChild(childSlot, index2) {
       {
         var isAnArray = isArray(childSlot);
         var isIterable = !isAnArray && typeof getIteratorFn(childSlot) === "function";
         if (isAnArray || isIterable) {
           var type = isAnArray ? "array" : "iterable";
-          error("A nested %s was passed to row #%s in <SuspenseList />. Wrap it in an additional SuspenseList to configure its revealOrder: <SuspenseList revealOrder=...> ... <SuspenseList revealOrder=...>{%s}</SuspenseList> ... </SuspenseList>", type, index3, type);
+          error("A nested %s was passed to row #%s in <SuspenseList />. Wrap it in an additional SuspenseList to configure its revealOrder: <SuspenseList revealOrder=...> ... <SuspenseList revealOrder=...>{%s}</SuspenseList> ... </SuspenseList>", type, index2, type);
           return false;
         }
       }
@@ -21868,10 +21868,10 @@ var scheduler_development = {};
     var setErrorHandler = null;
     var setSuspenseHandler = null;
     {
-      var copyWithDeleteImpl = function(obj, path, index3) {
-        var key = path[index3];
+      var copyWithDeleteImpl = function(obj, path, index2) {
+        var key = path[index2];
         var updated = isArray(obj) ? obj.slice() : assign({}, obj);
-        if (index3 + 1 === path.length) {
+        if (index2 + 1 === path.length) {
           if (isArray(updated)) {
             updated.splice(key, 1);
           } else {
@@ -21879,17 +21879,17 @@ var scheduler_development = {};
           }
           return updated;
         }
-        updated[key] = copyWithDeleteImpl(obj[key], path, index3 + 1);
+        updated[key] = copyWithDeleteImpl(obj[key], path, index2 + 1);
         return updated;
       };
       var copyWithDelete = function(obj, path) {
         return copyWithDeleteImpl(obj, path, 0);
       };
-      var copyWithRenameImpl = function(obj, oldPath, newPath, index3) {
-        var oldKey = oldPath[index3];
+      var copyWithRenameImpl = function(obj, oldPath, newPath, index2) {
+        var oldKey = oldPath[index2];
         var updated = isArray(obj) ? obj.slice() : assign({}, obj);
-        if (index3 + 1 === oldPath.length) {
-          var newKey = newPath[index3];
+        if (index2 + 1 === oldPath.length) {
+          var newKey = newPath[index2];
           updated[newKey] = updated[oldKey];
           if (isArray(updated)) {
             updated.splice(oldKey, 1);
@@ -21897,7 +21897,7 @@ var scheduler_development = {};
             delete updated[oldKey];
           }
         } else {
-          updated[oldKey] = copyWithRenameImpl(obj[oldKey], oldPath, newPath, index3 + 1);
+          updated[oldKey] = copyWithRenameImpl(obj[oldKey], oldPath, newPath, index2 + 1);
         }
         return updated;
       };
@@ -21915,13 +21915,13 @@ var scheduler_development = {};
         }
         return copyWithRenameImpl(obj, oldPath, newPath, 0);
       };
-      var copyWithSetImpl = function(obj, path, index3, value) {
-        if (index3 >= path.length) {
+      var copyWithSetImpl = function(obj, path, index2, value) {
+        if (index2 >= path.length) {
           return value;
         }
-        var key = path[index3];
+        var key = path[index2];
         var updated = isArray(obj) ? obj.slice() : assign({}, obj);
-        updated[key] = copyWithSetImpl(obj[key], path, index3 + 1, value);
+        updated[key] = copyWithSetImpl(obj[key], path, index2 + 1, value);
         return updated;
       };
       var copyWithSet = function(obj, path, value) {
@@ -22503,7 +22503,6 @@ var m = reactDom.exports;
     }
   };
 }
-var tailwind = /* @__PURE__ */ (() => '/*\n! tailwindcss v3.1.2 | MIT License | https://tailwindcss.com\n*//*\n1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)\n2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)\n*/\n\n*,\n::before,\n::after {\n  box-sizing: border-box; /* 1 */\n  border-width: 0; /* 2 */\n  border-style: solid; /* 2 */\n  border-color: #e5e7eb; /* 2 */\n}\n\n::before,\n::after {\n  --tw-content: \'\';\n}\n\n/*\n1. Use a consistent sensible line-height in all browsers.\n2. Prevent adjustments of font size after orientation changes in iOS.\n3. Use a more readable tab size.\n4. Use the user\'s configured `sans` font-family by default.\n*/\n\nhtml {\n  line-height: 1.5; /* 1 */\n  -webkit-text-size-adjust: 100%; /* 2 */\n  -moz-tab-size: 4; /* 3 */\n  -o-tab-size: 4;\n     tab-size: 4; /* 3 */\n  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */\n}\n\n/*\n1. Remove the margin in all browsers.\n2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.\n*/\n\nbody {\n  margin: 0; /* 1 */\n  line-height: inherit; /* 2 */\n}\n\n/*\n1. Add the correct height in Firefox.\n2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)\n3. Ensure horizontal rules are visible by default.\n*/\n\nhr {\n  height: 0; /* 1 */\n  color: inherit; /* 2 */\n  border-top-width: 1px; /* 3 */\n}\n\n/*\nAdd the correct text decoration in Chrome, Edge, and Safari.\n*/\n\nabbr:where([title]) {\n  -webkit-text-decoration: underline dotted;\n          text-decoration: underline dotted;\n}\n\n/*\nRemove the default font size and weight for headings.\n*/\n\nh1,\nh2,\nh3,\nh4,\nh5,\nh6 {\n  font-size: inherit;\n  font-weight: inherit;\n}\n\n/*\nReset links to optimize for opt-in styling instead of opt-out.\n*/\n\na {\n  color: inherit;\n  text-decoration: inherit;\n}\n\n/*\nAdd the correct font weight in Edge and Safari.\n*/\n\nb,\nstrong {\n  font-weight: bolder;\n}\n\n/*\n1. Use the user\'s configured `mono` font family by default.\n2. Correct the odd `em` font sizing in all browsers.\n*/\n\ncode,\nkbd,\nsamp,\npre {\n  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */\n  font-size: 1em; /* 2 */\n}\n\n/*\nAdd the correct font size in all browsers.\n*/\n\nsmall {\n  font-size: 80%;\n}\n\n/*\nPrevent `sub` and `sup` elements from affecting the line height in all browsers.\n*/\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\n\nsub {\n  bottom: -0.25em;\n}\n\nsup {\n  top: -0.5em;\n}\n\n/*\n1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)\n2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)\n3. Remove gaps between table borders by default.\n*/\n\ntable {\n  text-indent: 0; /* 1 */\n  border-color: inherit; /* 2 */\n  border-collapse: collapse; /* 3 */\n}\n\n/*\n1. Change the font styles in all browsers.\n2. Remove the margin in Firefox and Safari.\n3. Remove default padding in all browsers.\n*/\n\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  font-family: inherit; /* 1 */\n  font-size: 100%; /* 1 */\n  font-weight: inherit; /* 1 */\n  line-height: inherit; /* 1 */\n  color: inherit; /* 1 */\n  margin: 0; /* 2 */\n  padding: 0; /* 3 */\n}\n\n/*\nRemove the inheritance of text transform in Edge and Firefox.\n*/\n\nbutton,\nselect {\n  text-transform: none;\n}\n\n/*\n1. Correct the inability to style clickable types in iOS and Safari.\n2. Remove default button styles.\n*/\n\nbutton,\n[type=\'button\'],\n[type=\'reset\'],\n[type=\'submit\'] {\n  -webkit-appearance: button; /* 1 */\n  background-color: transparent; /* 2 */\n  background-image: none; /* 2 */\n}\n\n/*\nUse the modern Firefox focus style for all focusable elements.\n*/\n\n:-moz-focusring {\n  outline: auto;\n}\n\n/*\nRemove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)\n*/\n\n:-moz-ui-invalid {\n  box-shadow: none;\n}\n\n/*\nAdd the correct vertical alignment in Chrome and Firefox.\n*/\n\nprogress {\n  vertical-align: baseline;\n}\n\n/*\nCorrect the cursor style of increment and decrement buttons in Safari.\n*/\n\n::-webkit-inner-spin-button,\n::-webkit-outer-spin-button {\n  height: auto;\n}\n\n/*\n1. Correct the odd appearance in Chrome and Safari.\n2. Correct the outline style in Safari.\n*/\n\n[type=\'search\'] {\n  -webkit-appearance: textfield; /* 1 */\n  outline-offset: -2px; /* 2 */\n}\n\n/*\nRemove the inner padding in Chrome and Safari on macOS.\n*/\n\n::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\n\n/*\n1. Correct the inability to style clickable types in iOS and Safari.\n2. Change font properties to `inherit` in Safari.\n*/\n\n::-webkit-file-upload-button {\n  -webkit-appearance: button; /* 1 */\n  font: inherit; /* 2 */\n}\n\n/*\nAdd the correct display in Chrome and Safari.\n*/\n\nsummary {\n  display: list-item;\n}\n\n/*\nRemoves the default spacing and border for appropriate elements.\n*/\n\nblockquote,\ndl,\ndd,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\nhr,\nfigure,\np,\npre {\n  margin: 0;\n}\n\nfieldset {\n  margin: 0;\n  padding: 0;\n}\n\nlegend {\n  padding: 0;\n}\n\nol,\nul,\nmenu {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\n\n/*\nPrevent resizing textareas horizontally by default.\n*/\n\ntextarea {\n  resize: vertical;\n}\n\n/*\n1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)\n2. Set the default placeholder color to the user\'s configured gray 400 color.\n*/\n\ninput::-moz-placeholder, textarea::-moz-placeholder {\n  opacity: 1; /* 1 */\n  color: #9ca3af; /* 2 */\n}\n\ninput:-ms-input-placeholder, textarea:-ms-input-placeholder {\n  opacity: 1; /* 1 */\n  color: #9ca3af; /* 2 */\n}\n\ninput::placeholder,\ntextarea::placeholder {\n  opacity: 1; /* 1 */\n  color: #9ca3af; /* 2 */\n}\n\n/*\nSet the default cursor for buttons.\n*/\n\nbutton,\n[role="button"] {\n  cursor: pointer;\n}\n\n/*\nMake sure disabled buttons don\'t get the pointer cursor.\n*/\n:disabled {\n  cursor: default;\n}\n\n/*\n1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)\n2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)\n   This can trigger a poorly considered lint error in some tools but is included by design.\n*/\n\nimg,\nsvg,\nvideo,\ncanvas,\naudio,\niframe,\nembed,\nobject {\n  display: block; /* 1 */\n  vertical-align: middle; /* 2 */\n}\n\n/*\nConstrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)\n*/\n\nimg,\nvideo {\n  max-width: 100%;\n  height: auto;\n}\n\n*, ::before, ::after {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n}\n\n::-webkit-backdrop {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n}\n\n::backdrop {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n}\n.container {\n  width: 100%;\n}\n@media (min-width: 640px) {\n\n  .container {\n    max-width: 640px;\n  }\n}\n@media (min-width: 768px) {\n\n  .container {\n    max-width: 768px;\n  }\n}\n@media (min-width: 1024px) {\n\n  .container {\n    max-width: 1024px;\n  }\n}\n@media (min-width: 1280px) {\n\n  .container {\n    max-width: 1280px;\n  }\n}\n@media (min-width: 1536px) {\n\n  .container {\n    max-width: 1536px;\n  }\n}\n.mx-auto {\n  margin-left: auto;\n  margin-right: auto;\n}\n.-mx-4 {\n  margin-left: -1rem;\n  margin-right: -1rem;\n}\n.mx-4 {\n  margin-left: 1rem;\n  margin-right: 1rem;\n}\n.mr-auto {\n  margin-right: auto;\n}\n.ml-auto {\n  margin-left: auto;\n}\n.mb-4 {\n  margin-bottom: 1rem;\n}\n.flex {\n  display: flex;\n}\n.hidden {\n  display: none;\n}\n.h-auto {\n  height: auto;\n}\n.w-full {\n  width: 100%;\n}\n.max-w-3xl {\n  max-width: 48rem;\n}\n.flex-1 {\n  flex: 1 1 0%;\n}\n.items-center {\n  align-items: center;\n}\n.justify-center {\n  justify-content: center;\n}\n.overflow-hidden {\n  overflow: hidden;\n}\n.rounded-md {\n  border-radius: 0.375rem;\n}\n.bg-gray-800 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(31 41 55 / var(--tw-bg-opacity));\n}\n.bg-gray-900 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(17 24 39 / var(--tw-bg-opacity));\n}\n.bg-black {\n  --tw-bg-opacity: 1;\n  background-color: rgb(0 0 0 / var(--tw-bg-opacity));\n}\n.bg-gradient-to-br {\n  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));\n}\n.from-purple-400 {\n  --tw-gradient-from: #c084fc;\n  --tw-gradient-to: rgb(192 132 252 / 0);\n  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);\n}\n.to-pink-400 {\n  --tw-gradient-to: #f472b6;\n}\n.p-4 {\n  padding: 1rem;\n}\n.py-4 {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n}\n.py-8 {\n  padding-top: 2rem;\n  padding-bottom: 2rem;\n}\n.px-4 {\n  padding-left: 1rem;\n  padding-right: 1rem;\n}\n.text-center {\n  text-align: center;\n}\n.text-2xl {\n  font-size: 1.5rem;\n  line-height: 2rem;\n}\n.text-xl {\n  font-size: 1.25rem;\n  line-height: 1.75rem;\n}\n.text-lg {\n  font-size: 1.125rem;\n  line-height: 1.75rem;\n}\n.font-bold {\n  font-weight: 700;\n}\n.font-light {\n  font-weight: 300;\n}\n.uppercase {\n  text-transform: uppercase;\n}\n.text-white {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity));\n}\n.text-gray-500 {\n  --tw-text-opacity: 1;\n  color: rgb(107 114 128 / var(--tw-text-opacity));\n}\n.transition {\n  transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms;\n}\n.duration-300 {\n  transition-duration: 300ms;\n}\n.hover\\:opacity-90:hover {\n  opacity: 0.9;\n}\n.disabled\\:opacity-50:disabled {\n  opacity: 0.5;\n}')();
 var jsxDevRuntime = { exports: {} };
 var reactJsxDevRuntime_development = {};
 /**
@@ -23367,36 +23366,61 @@ var reactJsxDevRuntime_development = {};
 {
   jsxDevRuntime.exports = reactJsxDevRuntime_development;
 }
-var _jsxFileName$1 = "/Users/syedgalibahmed/Applications/web/react/recorder-app/src/js/App.jsx";
+var _jsxFileName$1 = "/Users/syedgalibahmed/Applications/web/react/recorder-app/src/js/RecordingApp/App.jsx";
 function App() {
   const [recorder, setRecorder] = react.exports.useState(null);
-  const [stream, setStream] = react.exports.useState(null);
-  const [audio, setAudio] = react.exports.useState(null);
-  const [mixedStream, setMixedStream] = react.exports.useState(null);
+  const [screenStream, setScreenStream] = react.exports.useState(null);
+  const [videoStream, setVideoStream] = react.exports.useState(null);
+  const [audioStream, setAudioStream] = react.exports.useState(null);
   const [chunks, setChunks] = react.exports.useState([]);
   const [downloadLink, setdownloadLink] = react.exports.useState("#");
-  const [initRecording, setInitRecording] = react.exports.useState(false);
+  const [initVideoRecording, setInitVideoRecording] = react.exports.useState(false);
+  const [initScreenRecording, setInitScreenRecording] = react.exports.useState(false);
   const [isRecording, setIsRecording] = react.exports.useState(false);
   const [isDoneRecording, setIsDoneRecording] = react.exports.useState(false);
   const recordingVideo = react.exports.useRef();
   const recordedVideo = react.exports.useRef();
   react.exports.useEffect(() => {
     console.log({
-      stream,
-      audio,
-      isInitRecording: initRecording
+      videoStream,
+      screenStream,
+      audioStream,
+      initVideoRecording,
+      initScreenRecording
     });
-    if (!initRecording) {
+    if (initScreenRecording) {
+      startScreenRecording();
       return;
     }
-    startRecording();
-  }, [initRecording]);
-  async function setupStream() {
+    if (initVideoRecording) {
+      startVideoRecording();
+      return;
+    }
+  }, [initVideoRecording, initScreenRecording]);
+  async function setupVideoRecording() {
+    try {
+      const newVideoStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100
+        }
+      });
+      setVideoStream(newVideoStream);
+      setInitVideoRecording(true);
+    } catch (error) {
+      console.warn("setupStream:", {
+        error
+      });
+    }
+  }
+  async function setupScreenRecording() {
     try {
       const newScreenStream = await navigator.mediaDevices.getDisplayMedia({
         video: true
       });
-      setStream(newScreenStream);
+      setScreenStream(newScreenStream);
       const newAudioStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
@@ -23404,8 +23428,8 @@ function App() {
           sampleRate: 44100
         }
       });
-      setAudio(newAudioStream);
-      setInitRecording(true);
+      setAudioStream(newAudioStream);
+      setInitScreenRecording(true);
     } catch (error) {
       console.warn("setupStream:", {
         error
@@ -23413,41 +23437,63 @@ function App() {
     }
   }
   function setupVideoFeedback() {
-    if (!stream) {
+    if (!videoStream && !screenStream) {
       console.warn("No Stream Available");
       return;
     }
     if (recordingVideo.current.srcObject) {
       return;
     }
-    recordingVideo.current.srcObject = stream;
+    if (videoStream) {
+      recordingVideo.current.srcObject = videoStream;
+    } else if (screenStream) {
+      recordingVideo.current.srcObject = screenStream;
+    }
     recordingVideo.current.play();
   }
-  async function startRecording() {
+  async function startVideoRecording() {
     if (isRecording) {
       return;
     }
-    console.log("startRecording");
-    if (!stream || !audio) {
+    console.log("Start Video Recording");
+    if (!videoStream) {
       console.warn("Something went wrong!");
       console.log({
-        stream,
-        audio
+        stream: videoStream
       });
       return;
     }
-    setMixedStream((currentMixedStream) => {
-      currentMixedStream = new MediaStream([...stream.getTracks(), ...audio.getTracks()]);
-      const _recorder = new MediaRecorder(currentMixedStream);
-      _recorder.ondataavailable = handleDataAvailable;
-      _recorder.onstop = handleDataStop;
-      _recorder.start(1e3);
-      setRecorder(_recorder);
-      setIsRecording(true);
-      setupVideoFeedback();
-      console.log("Recording has started");
-      return currentMixedStream;
-    });
+    const _recorder = new MediaRecorder(videoStream);
+    _recorder.ondataavailable = handleDataAvailable;
+    _recorder.onstop = handleDataStop;
+    _recorder.start(1e3);
+    setRecorder(_recorder);
+    setIsRecording(true);
+    setupVideoFeedback();
+    console.log("Recording has started");
+  }
+  async function startScreenRecording() {
+    if (isRecording) {
+      return;
+    }
+    console.log("Start Screen Recording");
+    if (!screenStream || !audioStream) {
+      console.warn("Something went wrong!");
+      console.log({
+        stream: screenStream,
+        audio: audioStream
+      });
+      return;
+    }
+    const newMixedStream = new MediaStream([...screenStream.getTracks(), ...audioStream.getTracks()]);
+    const _recorder = new MediaRecorder(newMixedStream);
+    _recorder.ondataavailable = handleDataAvailable;
+    _recorder.onstop = handleDataStop;
+    _recorder.start(1e3);
+    setRecorder(_recorder);
+    setIsRecording(true);
+    setupVideoFeedback();
+    console.log("Recording has started");
   }
   function handleDataAvailable(event) {
     setChunks((currentChunks) => {
@@ -23463,9 +23509,14 @@ function App() {
   }
   function stopRecording() {
     recorder.stop();
-    stream.getTracks().forEach((track) => track.stop());
-    audio.getTracks().forEach((track) => track.stop());
-    setInitRecording(false);
+    if (videoStream) {
+      videoStream.getTracks().forEach((track) => track.stop());
+      setInitVideoRecording(false);
+    } else if (screenStream) {
+      screenStream.getTracks().forEach((track) => track.stop());
+      audioStream.getTracks().forEach((track) => track.stop());
+      setInitScreenRecording(false);
+    }
     setIsRecording(false);
   }
   function handleDataStop(event) {
@@ -23491,6 +23542,18 @@ function App() {
     });
     setIsDoneRecording(true);
   }
+  function reset() {
+    setRecorder(null);
+    setScreenStream(null);
+    setVideoStream(null);
+    setAudioStream(null);
+    setChunks([]);
+    setdownloadLink("#");
+    setInitVideoRecording(false);
+    setInitScreenRecording(false);
+    setIsRecording(false);
+    setIsDoneRecording(false);
+  }
   return /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV(jsxDevRuntime.exports.Fragment, {
     children: [/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("header", {
       className: "bg-gray-900",
@@ -23498,60 +23561,62 @@ function App() {
         className: "container max-auto flex justify-center items-center py-4",
         children: /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("h1", {
           className: "text-2xl font-bold uppercase",
-          children: "Recorder App"
+          children: "Screen & Video Recoder"
         }, void 0, false, {
           fileName: _jsxFileName$1,
-          lineNumber: 170,
+          lineNumber: 253,
           columnNumber: 11
         }, this)
       }, void 0, false, {
         fileName: _jsxFileName$1,
-        lineNumber: 169,
+        lineNumber: 252,
         columnNumber: 9
       }, this)
     }, void 0, false, {
       fileName: _jsxFileName$1,
-      lineNumber: 168,
+      lineNumber: 251,
       columnNumber: 7
     }, this), /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("main", {
       className: "overflow-hidden max-w-3xl mr-auto ml-auto",
-      children: [/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("p", {
-        children: "isDoneRecording" + (isDoneRecording ? ": true" : ": false")
-      }, void 0, false, {
-        fileName: _jsxFileName$1,
-        lineNumber: 175,
-        columnNumber: 9
-      }, this), /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("div", {
+      children: [/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("div", {
         className: "recording-video-wrap container mx-auto py-8 px-4 mb-4" + (isDoneRecording ? " hidden" : ""),
-        children: [/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("h2", {
-          className: "text-xl text-gray-500 uppercase font-light mb-4",
-          children: "Video Recoder"
-        }, void 0, false, {
-          fileName: _jsxFileName$1,
-          lineNumber: 184,
-          columnNumber: 11
-        }, this), /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("video", {
+        children: [/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("video", {
           ref: recordingVideo,
           src: "",
           autoPlay: true,
-          className: "video-feedback bg-black w-full h-auto mb-4"
+          className: "video-feedback bg-black w-full aspect-video mb-4"
         }, void 0, false, {
           fileName: _jsxFileName$1,
-          lineNumber: 188,
+          lineNumber: 268,
           columnNumber: 11
-        }, this), /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("div", {
+        }, this), !isRecording && /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("div", {
           className: "flex justify-center items-center -mx-4",
           children: [/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("button", {
             type: "button",
             className: "start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md",
-            disabled: isRecording,
-            onClick: setupStream,
-            children: "Start Recording"
+            onClick: setupVideoRecording,
+            children: "Record Video"
           }, void 0, false, {
             fileName: _jsxFileName$1,
-            lineNumber: 196,
-            columnNumber: 13
+            lineNumber: 277,
+            columnNumber: 15
           }, this), /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("button", {
+            type: "button",
+            className: "start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md",
+            onClick: setupScreenRecording,
+            children: "Record Screen"
+          }, void 0, false, {
+            fileName: _jsxFileName$1,
+            lineNumber: 284,
+            columnNumber: 15
+          }, this)]
+        }, void 0, true, {
+          fileName: _jsxFileName$1,
+          lineNumber: 276,
+          columnNumber: 13
+        }, this), isRecording && /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("div", {
+          className: "flex justify-center items-center -mx-4",
+          children: /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("button", {
             type: "button",
             className: "start-recording mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md",
             disabled: !isRecording,
@@ -23559,77 +23624,70 @@ function App() {
             children: "Stop Recording"
           }, void 0, false, {
             fileName: _jsxFileName$1,
-            lineNumber: 204,
-            columnNumber: 13
-          }, this)]
-        }, void 0, true, {
+            lineNumber: 296,
+            columnNumber: 15
+          }, this)
+        }, void 0, false, {
           fileName: _jsxFileName$1,
-          lineNumber: 195,
-          columnNumber: 11
+          lineNumber: 295,
+          columnNumber: 13
         }, this)]
       }, void 0, true, {
         fileName: _jsxFileName$1,
-        lineNumber: 178,
+        lineNumber: 262,
         columnNumber: 9
       }, this), /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("div", {
         className: "recorded-video-wrap container mx-auto py-8 px-4" + (!isDoneRecording ? " hidden" : ""),
-        children: [/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("h2", {
-          className: "text-xl text-gray-500 uppercase font-light mb-4",
-          children: "Recoded Video"
-        }, void 0, false, {
-          fileName: _jsxFileName$1,
-          lineNumber: 221,
-          columnNumber: 11
-        }, this), /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("video", {
+        children: [/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("video", {
           ref: recordedVideo,
           src: "",
           autoPlay: true,
-          className: "recorded-video bg-black w-full h-auto mb-4"
+          className: "recorded-video bg-black w-full aspect-video mb-4"
         }, void 0, false, {
           fileName: _jsxFileName$1,
-          lineNumber: 225,
+          lineNumber: 315,
           columnNumber: 11
         }, this), /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("div", {
           className: "flex justify-center items-center -mx-4",
-          children: [/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("button", {
-            type: "button",
-            className: "download-video text-center mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md",
-            onClick: () => recordedVideo.current.play(),
-            children: "Play"
-          }, void 0, false, {
-            fileName: _jsxFileName$1,
-            lineNumber: 233,
-            columnNumber: 13
-          }, this), /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("a", {
+          children: [/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("a", {
             href: downloadLink,
             download: "video.mp4",
             type: "button",
             className: "download-video text-center mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md",
-            disabled: !downloadLink,
             children: "Download Video"
           }, void 0, false, {
             fileName: _jsxFileName$1,
-            lineNumber: 240,
+            lineNumber: 323,
+            columnNumber: 13
+          }, this), /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV("button", {
+            download: "video.mp4",
+            type: "button",
+            className: "download-video text-center mx-4 p-4 flex-1 bg-gradient-to-br from-purple-400 to-pink-400 uppercase text-lg font-bold transition duration-300 hover:opacity-90 disabled:opacity-50 rounded-md",
+            onClick: reset,
+            children: "Record Another One"
+          }, void 0, false, {
+            fileName: _jsxFileName$1,
+            lineNumber: 331,
             columnNumber: 13
           }, this)]
         }, void 0, true, {
           fileName: _jsxFileName$1,
-          lineNumber: 232,
+          lineNumber: 322,
           columnNumber: 11
         }, this)]
       }, void 0, true, {
         fileName: _jsxFileName$1,
-        lineNumber: 215,
+        lineNumber: 309,
         columnNumber: 9
       }, this)]
     }, void 0, true, {
       fileName: _jsxFileName$1,
-      lineNumber: 174,
+      lineNumber: 260,
       columnNumber: 7
     }, this)]
   }, void 0, true);
 }
-var index = /* @__PURE__ */ (() => 'body {\n  margin: 0;\n  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n\ncode {\n  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;\n}')();
+var tailwind = /* @__PURE__ */ (() => '/*\n! tailwindcss v3.1.2 | MIT License | https://tailwindcss.com\n*//*\n1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)\n2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)\n*/\n\n*,\n::before,\n::after {\n  box-sizing: border-box; /* 1 */\n  border-width: 0; /* 2 */\n  border-style: solid; /* 2 */\n  border-color: #e5e7eb; /* 2 */\n}\n\n::before,\n::after {\n  --tw-content: \'\';\n}\n\n/*\n1. Use a consistent sensible line-height in all browsers.\n2. Prevent adjustments of font size after orientation changes in iOS.\n3. Use a more readable tab size.\n4. Use the user\'s configured `sans` font-family by default.\n*/\n\nhtml {\n  line-height: 1.5; /* 1 */\n  -webkit-text-size-adjust: 100%; /* 2 */\n  -moz-tab-size: 4; /* 3 */\n  -o-tab-size: 4;\n     tab-size: 4; /* 3 */\n  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */\n}\n\n/*\n1. Remove the margin in all browsers.\n2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.\n*/\n\nbody {\n  margin: 0; /* 1 */\n  line-height: inherit; /* 2 */\n}\n\n/*\n1. Add the correct height in Firefox.\n2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)\n3. Ensure horizontal rules are visible by default.\n*/\n\nhr {\n  height: 0; /* 1 */\n  color: inherit; /* 2 */\n  border-top-width: 1px; /* 3 */\n}\n\n/*\nAdd the correct text decoration in Chrome, Edge, and Safari.\n*/\n\nabbr:where([title]) {\n  -webkit-text-decoration: underline dotted;\n          text-decoration: underline dotted;\n}\n\n/*\nRemove the default font size and weight for headings.\n*/\n\nh1,\nh2,\nh3,\nh4,\nh5,\nh6 {\n  font-size: inherit;\n  font-weight: inherit;\n}\n\n/*\nReset links to optimize for opt-in styling instead of opt-out.\n*/\n\na {\n  color: inherit;\n  text-decoration: inherit;\n}\n\n/*\nAdd the correct font weight in Edge and Safari.\n*/\n\nb,\nstrong {\n  font-weight: bolder;\n}\n\n/*\n1. Use the user\'s configured `mono` font family by default.\n2. Correct the odd `em` font sizing in all browsers.\n*/\n\ncode,\nkbd,\nsamp,\npre {\n  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */\n  font-size: 1em; /* 2 */\n}\n\n/*\nAdd the correct font size in all browsers.\n*/\n\nsmall {\n  font-size: 80%;\n}\n\n/*\nPrevent `sub` and `sup` elements from affecting the line height in all browsers.\n*/\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\n\nsub {\n  bottom: -0.25em;\n}\n\nsup {\n  top: -0.5em;\n}\n\n/*\n1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)\n2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)\n3. Remove gaps between table borders by default.\n*/\n\ntable {\n  text-indent: 0; /* 1 */\n  border-color: inherit; /* 2 */\n  border-collapse: collapse; /* 3 */\n}\n\n/*\n1. Change the font styles in all browsers.\n2. Remove the margin in Firefox and Safari.\n3. Remove default padding in all browsers.\n*/\n\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  font-family: inherit; /* 1 */\n  font-size: 100%; /* 1 */\n  font-weight: inherit; /* 1 */\n  line-height: inherit; /* 1 */\n  color: inherit; /* 1 */\n  margin: 0; /* 2 */\n  padding: 0; /* 3 */\n}\n\n/*\nRemove the inheritance of text transform in Edge and Firefox.\n*/\n\nbutton,\nselect {\n  text-transform: none;\n}\n\n/*\n1. Correct the inability to style clickable types in iOS and Safari.\n2. Remove default button styles.\n*/\n\nbutton,\n[type=\'button\'],\n[type=\'reset\'],\n[type=\'submit\'] {\n  -webkit-appearance: button; /* 1 */\n  background-color: transparent; /* 2 */\n  background-image: none; /* 2 */\n}\n\n/*\nUse the modern Firefox focus style for all focusable elements.\n*/\n\n:-moz-focusring {\n  outline: auto;\n}\n\n/*\nRemove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)\n*/\n\n:-moz-ui-invalid {\n  box-shadow: none;\n}\n\n/*\nAdd the correct vertical alignment in Chrome and Firefox.\n*/\n\nprogress {\n  vertical-align: baseline;\n}\n\n/*\nCorrect the cursor style of increment and decrement buttons in Safari.\n*/\n\n::-webkit-inner-spin-button,\n::-webkit-outer-spin-button {\n  height: auto;\n}\n\n/*\n1. Correct the odd appearance in Chrome and Safari.\n2. Correct the outline style in Safari.\n*/\n\n[type=\'search\'] {\n  -webkit-appearance: textfield; /* 1 */\n  outline-offset: -2px; /* 2 */\n}\n\n/*\nRemove the inner padding in Chrome and Safari on macOS.\n*/\n\n::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\n\n/*\n1. Correct the inability to style clickable types in iOS and Safari.\n2. Change font properties to `inherit` in Safari.\n*/\n\n::-webkit-file-upload-button {\n  -webkit-appearance: button; /* 1 */\n  font: inherit; /* 2 */\n}\n\n/*\nAdd the correct display in Chrome and Safari.\n*/\n\nsummary {\n  display: list-item;\n}\n\n/*\nRemoves the default spacing and border for appropriate elements.\n*/\n\nblockquote,\ndl,\ndd,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\nhr,\nfigure,\np,\npre {\n  margin: 0;\n}\n\nfieldset {\n  margin: 0;\n  padding: 0;\n}\n\nlegend {\n  padding: 0;\n}\n\nol,\nul,\nmenu {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\n\n/*\nPrevent resizing textareas horizontally by default.\n*/\n\ntextarea {\n  resize: vertical;\n}\n\n/*\n1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)\n2. Set the default placeholder color to the user\'s configured gray 400 color.\n*/\n\ninput::-moz-placeholder, textarea::-moz-placeholder {\n  opacity: 1; /* 1 */\n  color: #9ca3af; /* 2 */\n}\n\ninput:-ms-input-placeholder, textarea:-ms-input-placeholder {\n  opacity: 1; /* 1 */\n  color: #9ca3af; /* 2 */\n}\n\ninput::placeholder,\ntextarea::placeholder {\n  opacity: 1; /* 1 */\n  color: #9ca3af; /* 2 */\n}\n\n/*\nSet the default cursor for buttons.\n*/\n\nbutton,\n[role="button"] {\n  cursor: pointer;\n}\n\n/*\nMake sure disabled buttons don\'t get the pointer cursor.\n*/\n:disabled {\n  cursor: default;\n}\n\n/*\n1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)\n2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)\n   This can trigger a poorly considered lint error in some tools but is included by design.\n*/\n\nimg,\nsvg,\nvideo,\ncanvas,\naudio,\niframe,\nembed,\nobject {\n  display: block; /* 1 */\n  vertical-align: middle; /* 2 */\n}\n\n/*\nConstrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)\n*/\n\nimg,\nvideo {\n  max-width: 100%;\n  height: auto;\n}\n\n*, ::before, ::after {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n}\n\n::-webkit-backdrop {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n}\n\n::backdrop {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n}\n.container {\n  width: 100%;\n}\n@media (min-width: 640px) {\n\n  .container {\n    max-width: 640px;\n  }\n}\n@media (min-width: 768px) {\n\n  .container {\n    max-width: 768px;\n  }\n}\n@media (min-width: 1024px) {\n\n  .container {\n    max-width: 1024px;\n  }\n}\n@media (min-width: 1280px) {\n\n  .container {\n    max-width: 1280px;\n  }\n}\n@media (min-width: 1536px) {\n\n  .container {\n    max-width: 1536px;\n  }\n}\n.mx-auto {\n  margin-left: auto;\n  margin-right: auto;\n}\n.-mx-4 {\n  margin-left: -1rem;\n  margin-right: -1rem;\n}\n.mx-4 {\n  margin-left: 1rem;\n  margin-right: 1rem;\n}\n.mr-auto {\n  margin-right: auto;\n}\n.ml-auto {\n  margin-left: auto;\n}\n.mb-4 {\n  margin-bottom: 1rem;\n}\n.flex {\n  display: flex;\n}\n.hidden {\n  display: none;\n}\n.aspect-video {\n  aspect-ratio: 16 / 9;\n}\n.h-auto {\n  height: auto;\n}\n.w-full {\n  width: 100%;\n}\n.max-w-3xl {\n  max-width: 48rem;\n}\n.flex-1 {\n  flex: 1 1 0%;\n}\n.items-center {\n  align-items: center;\n}\n.justify-center {\n  justify-content: center;\n}\n.overflow-hidden {\n  overflow: hidden;\n}\n.rounded-md {\n  border-radius: 0.375rem;\n}\n.bg-gray-800 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(31 41 55 / var(--tw-bg-opacity));\n}\n.bg-gray-900 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(17 24 39 / var(--tw-bg-opacity));\n}\n.bg-black {\n  --tw-bg-opacity: 1;\n  background-color: rgb(0 0 0 / var(--tw-bg-opacity));\n}\n.bg-gradient-to-br {\n  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));\n}\n.from-purple-400 {\n  --tw-gradient-from: #c084fc;\n  --tw-gradient-to: rgb(192 132 252 / 0);\n  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);\n}\n.to-pink-400 {\n  --tw-gradient-to: #f472b6;\n}\n.p-4 {\n  padding: 1rem;\n}\n.py-4 {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n}\n.py-8 {\n  padding-top: 2rem;\n  padding-bottom: 2rem;\n}\n.px-4 {\n  padding-left: 1rem;\n  padding-right: 1rem;\n}\n.text-center {\n  text-align: center;\n}\n.text-2xl {\n  font-size: 1.5rem;\n  line-height: 2rem;\n}\n.text-xl {\n  font-size: 1.25rem;\n  line-height: 1.75rem;\n}\n.text-lg {\n  font-size: 1.125rem;\n  line-height: 1.75rem;\n}\n.font-bold {\n  font-weight: 700;\n}\n.font-light {\n  font-weight: 300;\n}\n.uppercase {\n  text-transform: uppercase;\n}\n.text-white {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity));\n}\n.text-gray-500 {\n  --tw-text-opacity: 1;\n  color: rgb(107 114 128 / var(--tw-text-opacity));\n}\n.transition {\n  transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms;\n}\n.duration-300 {\n  transition-duration: 300ms;\n}\n.hover\\:opacity-90:hover {\n  opacity: 0.9;\n}\n.disabled\\:opacity-50:disabled {\n  opacity: 0.5;\n}')();
 var _jsxFileName = "/Users/syedgalibahmed/Applications/web/react/recorder-app/src/js/main.jsx";
 client.createRoot(document.getElementById("root")).render(/* @__PURE__ */ jsxDevRuntime.exports.jsxDEV(React.StrictMode, {
   children: /* @__PURE__ */ jsxDevRuntime.exports.jsxDEV(App, {}, void 0, false, {
